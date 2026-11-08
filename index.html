@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walmart Thanksgiving Value Meal Recipes</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        amber: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                            800: '#92400e',
+                            900: '#78350f',
+                        },
+                        cranberry: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                            800: '#9f1239',
+                            900: '#881337',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Alpine.js for lightweight interactive state management -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .recipe-card-hover { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+        .recipe-card-hover:hover { transform: translateY(-4px); }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+    </style>
+</head>
+<body x-data="appData()" :class="{ 'dark': darkMode, 'bg-slate-900 text-slate-100': darkMode, 'bg-amber-50/40 text-slate-800': !darkMode }" class="min-h-screen transition-colors duration-300">
+
+    <!-- Top Navigation Banner -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-amber-200/50 dark:border-slate-800 shadow-sm transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span class="p-2 bg-cranberry-600 text-white rounded-xl shadow-md">
+                    <i class="fa-solid fa-turkey text-xl"></i>
+                </span>
+                <div>
+                    <h1 class="font-bold text-lg leading-none text-slate-900 dark:text-amber-100">Walmart Thanksgiving Feast</h1>
+                    <p class="text-xs text-amber-700 dark:text-amber-400 font-medium">Value Meal Basket Guide (Feeds up to 10)</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <!-- Promo Code Badge in Header -->
+                <a href="https://www.walmart.com/i/shoppable-lists/Thanksgivng-value-meal/1069" target="_blank" rel="noopener" 
+                   class="hidden lg:flex items-center space-x-2 bg-emerald-100 dark:bg-emerald-950/80 hover:bg-emerald-200 text-emerald-900 dark:text-emerald-200 px-3.5 py-1.5 rounded-full text-xs font-bold border border-emerald-300 dark:border-emerald-700 transition-all shadow-sm">
+                    <i class="fa-solid fa-tag text-emerald-600 dark:text-emerald-400"></i>
+                    <span>Use Code <span class="underline decoration-wavy">DOUBLE10</span> &rarr; Just $25!</span>
+                </a>
+
+                <!-- Basket Progress Tracker Badge -->
+                <div class="hidden md:flex items-center space-x-2 bg-amber-100 dark:bg-slate-800 px-3 py-1.5 rounded-full text-xs font-semibold text-amber-900 dark:text-amber-300 border border-amber-300/40 dark:border-slate-700">
+                    <i class="fa-solid fa-basket-shopping text-cranberry-600 dark:text-cranberry-500"></i>
+                    <span>Basket Prep: <span x-text="checkedIngredientsCount"></span>/26 items</span>
+                </div>
+
+                <!-- Dark Mode Toggle -->
+                <button @click="toggleDarkMode()" 
+                        class="p-2.5 rounded-xl bg-amber-100/70 dark:bg-slate-800 text-amber-800 dark:text-amber-300 hover:bg-amber-200 dark:hover:bg-slate-700 transition-all focus:outline-none focus:ring-2 focus:ring-amber-500"
+                        title="Toggle dark/light mode">
+                    <i class="fa-solid" :class="darkMode ? 'fa-sun text-amber-400' : 'fa-moon text-slate-700'"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <section class="relative overflow-hidden bg-gradient-to-br from-amber-700 via-amber-800 to-cranberry-900 text-white py-12 px-4 sm:px-6 lg:px-8 shadow-inner">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white/20 backdrop-blur-md text-amber-100 mb-4 border border-white/20">
+                <i class="fa-solid fa-leaf mr-1.5 text-amber-300"></i> Official 26-Item Walmart Value Basket Recipes
+            </span>
+            <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 text-amber-50 drop-shadow-sm">
+                Delicious Thanksgiving Dinner for 10
+            </h2>
+            <p class="text-base sm:text-lg text-amber-100 max-w-2xl mx-auto mb-6 font-light leading-relaxed">
+                Step-by-step master cooking instructions, full recipe timing, interactive ingredient checklists, and a prep schedule crafted around your Walmart holiday meal bundle.
+            </p>
+
+            <!-- Deal Highlight Box -->
+            <div class="bg-white/10 backdrop-blur-md border border-white/25 rounded-2xl p-4 max-w-xl mx-auto mb-8 text-amber-50 shadow-lg">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+                    <div>
+                        <div class="flex items-center justify-center sm:justify-start space-x-2">
+                            <span class="text-xs uppercase tracking-wider font-semibold text-amber-200">Walmart Basket Deal</span>
+                            <span class="line-through text-amber-300/80 text-sm">$35 Regular</span>
+                        </div>
+                        <div class="text-2xl font-black text-amber-300 flex items-center justify-center sm:justify-start gap-2">
+                            <span>Only $25 Total!</span>
+                            <span class="text-xs bg-emerald-500 text-white font-bold px-2 py-0.5 rounded-full uppercase">Save $10</span>
+                        </div>
+                        <p class="text-xs text-amber-100/90 mt-0.5">Apply Promo Code: <strong class="bg-amber-400/30 px-1.5 py-0.5 rounded text-amber-200 border border-amber-300/40">DOUBLE10</strong> at checkout</p>
+                    </div>
+                    <a href="https://www.walmart.com/i/shoppable-lists/Thanksgivng-value-meal/1069" target="_blank" rel="noopener" 
+                       class="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-900 font-extrabold text-xs tracking-wide uppercase transition-all shadow-md flex items-center whitespace-nowrap">
+                        <i class="fa-solid fa-cart-shopping mr-2"></i> Get Basket on Walmart
+                    </a>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-3">
+                <a href="#recipes" class="inline-flex items-center px-5 py-2.5 rounded-xl bg-cranberry-600 hover:bg-cranberry-700 text-white font-semibold text-sm shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
+                    <i class="fa-solid fa-utensils mr-2"></i> Browse All Recipes
+                </a>
+                <a href="#checklist" class="inline-flex items-center px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-sm backdrop-blur-md border border-white/20 transition-all">
+                    <i class="fa-solid fa-list-check mr-2"></i> Ingredient Tracker
+                </a>
+                <a href="https://www.walmart.com/i/shoppable-lists/Thanksgivng-value-meal/1069" target="_blank" rel="noopener" class="inline-flex items-center px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-sm shadow-md transition-all">
+                    <i class="fa-solid fa-external-link mr-2"></i> Open Walmart.com
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Quick Navigation & Category Filters -->
+        <section id="recipes" class="space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-amber-200 dark:border-slate-800 pb-4">
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center">
+                        <i class="fa-solid fa-book-open text-cranberry-600 mr-2.5"></i> Course Recipes
+                    </h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Select a course category or view the interactive timeline</p>
+                </div>
+                <!-- Filter Buttons -->
+                <div class="flex flex-wrap gap-2">
+                    <template x-for="cat in categories" :key="cat.id">
+                        <button @click="activeCategory = cat.id"
+                                :class="activeCategory === cat.id ? 
+                                    'bg-cranberry-700 text-white shadow-md' : 
+                                    'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-amber-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'"
+                                class="px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center space-x-1.5">
+                            <i :class="cat.icon"></i>
+                            <span x-text="cat.name"></span>
+                        </button>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Recipe Grid -->
+            <div x-show="activeCategory !== 'timeline'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <template x-for="recipe in filteredRecipes" :key="recipe.id">
+                    <article class="bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-sm overflow-hidden flex flex-col recipe-card-hover">
+                        <!-- Card Header Banner -->
+                        <div class="p-5 bg-gradient-to-r from-amber-500/10 via-amber-100/20 to-cranberry-500/10 dark:from-slate-800 dark:to-slate-800 border-b border-slate-100 dark:border-slate-700/60 relative">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-700/50" x-text="recipe.categoryName"></span>
+                                <span class="text-xs text-slate-500 dark:text-slate-400 font-medium flex items-center">
+                                    <i class="fa-regular fa-clock mr-1 text-cranberry-600"></i> <span x-text="recipe.totalTime"></span>
+                                </span>
+                            </div>
+                            <h4 class="text-xl font-bold text-slate-900 dark:text-white leading-snug" x-text="recipe.title"></h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1" x-text="recipe.servings"></p>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="p-5 flex-1 flex flex-col justify-between space-y-5">
+                            <!-- Walmart Basket Ingredients Needed -->
+                            <div>
+                                <h5 class="text-xs font-bold uppercase text-amber-800 dark:text-amber-400 mb-2 flex items-center">
+                                    <i class="fa-solid fa-basket-shopping mr-1.5 text-cranberry-600"></i> Basket Items Needed
+                                </h5>
+                                <ul class="space-y-1.5">
+                                    <template x-for="(ing, idx) in recipe.ingredients" :key="idx">
+                                        <li class="text-xs text-slate-700 dark:text-slate-300 flex items-start">
+                                            <i class="fa-solid fa-circle-check text-emerald-500 dark:text-emerald-400 mt-0.5 mr-2 text-[10px]"></i>
+                                            <span x-html="ing"></span>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+
+                            <!-- Preparation Steps preview -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <h5 class="text-xs font-bold uppercase text-amber-800 dark:text-amber-400 flex items-center">
+                                        <i class="fa-solid fa-fire-burner mr-1.5 text-amber-600"></i> Cooking Steps
+                                    </h5>
+                                    <span class="text-[10px] text-slate-400" x-text="getCompletedStepsCount(recipe.id) + '/' + recipe.steps.length + ' done'"></span>
+                                </div>
+                                
+                                <div class="space-y-2 max-h-52 overflow-y-auto pr-1">
+                                    <template x-for="(step, sIdx) in recipe.steps" :key="sIdx">
+                                        <label class="flex items-start p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer text-xs border border-transparent transition-all"
+                                               :class="isStepCompleted(recipe.id, sIdx) ? 'line-through text-slate-400 dark:text-slate-500 bg-slate-50/50 dark:bg-slate-800/40' : 'text-slate-700 dark:text-slate-200'">
+                                            <input type="checkbox" 
+                                                   :checked="isStepCompleted(recipe.id, sIdx)"
+                                                   @change="toggleStep(recipe.id, sIdx)"
+                                                   class="mt-0.5 rounded text-cranberry-600 focus:ring-cranberry-500 mr-2.5 h-3.5 w-3.5">
+                                            <span class="flex-1"><strong class="font-semibold" x-text="(sIdx + 1) + '. '"></strong><span x-text="step"></span></span>
+                                        </label>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <!-- Chef Tips -->
+                            <div class="p-3 bg-amber-50 dark:bg-slate-700/40 rounded-xl border border-amber-200/60 dark:border-slate-700 text-xs text-amber-900 dark:text-amber-200 flex items-start">
+                                <i class="fa-solid fa-lightbulb text-amber-500 mt-0.5 mr-2 flex-shrink-0"></i>
+                                <div>
+                                    <span class="font-bold">Pro Tip: </span>
+                                    <span x-text="recipe.tip"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </template>
+            </div>
+
+            <!-- Thanksgiving Cooking Day Timeline View -->
+            <div x-show="activeCategory === 'timeline'" class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 md:p-8 shadow-sm space-y-8">
+                <div class="max-w-3xl">
+                    <h4 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Thanksgiving Cooking Schedule & Timeline</h4>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">Follow this step-by-step master timetable to make sure all 8 dishes land warm and fresh on the table at the exact same time.</p>
+                </div>
+
+                <div class="relative border-l-2 border-amber-300 dark:border-slate-700 ml-4 md:ml-6 space-y-8 pl-6 md:pl-8">
+                    <!-- T-3 Days -->
+                    <div class="relative">
+                        <span class="absolute -left-[31px] md:-left-[39px] top-0 w-8 h-8 rounded-full bg-amber-600 text-white flex items-center justify-center font-bold text-xs ring-4 ring-white dark:ring-slate-800">
+                            3d
+                        </span>
+                        <div class="bg-amber-50/60 dark:bg-slate-700/40 p-4 rounded-xl border border-amber-200/50 dark:border-slate-700">
+                            <h5 class="font-bold text-slate-900 dark:text-amber-200 text-base">3 Days Before (Tuesday)</h5>
+                            <ul class="mt-2 text-xs text-slate-700 dark:text-slate-300 space-y-1.5 list-disc list-inside">
+                                <li>Move frozen Butterball Turkey from freezer to bottom shelf of refrigerator to thaw safely (needs 3 days).</li>
+                                <li>Verify all 26 Walmart basket items are present and logged in your checklist.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- T-1 Day -->
+                    <div class="relative">
+                        <span class="absolute -left-[31px] md:-left-[39px] top-0 w-8 h-8 rounded-full bg-amber-600 text-white flex items-center justify-center font-bold text-xs ring-4 ring-white dark:ring-slate-800">
+                            1d
+                        </span>
+                        <div class="bg-amber-50/60 dark:bg-slate-700/40 p-4 rounded-xl border border-amber-200/50 dark:border-slate-700">
+                            <h5 class="font-bold text-slate-900 dark:text-amber-200 text-base">Day Before (Wednesday Evening)</h5>
+                            <ul class="mt-2 text-xs text-slate-700 dark:text-slate-300 space-y-1.5 list-disc list-inside">
+                                <li>Bake the Traditional Pumpkin Pie with Great Value Pure Pumpkin & Pie Crusts. Chill in fridge overnight.</li>
+                                <li>Cook the Fresh Cranberry Sauce on stovetop; let cool and refrigerate so it thickens into a rich jam.</li>
+                                <li>Peel and cube russet potatoes; submerge in cold water in fridge to prevent browning.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Thanksgiving Morning -->
+                    <div class="relative">
+                        <span class="absolute -left-[31px] md:-left-[39px] top-0 w-8 h-8 rounded-full bg-cranberry-600 text-white flex items-center justify-center font-bold text-xs ring-4 ring-white dark:ring-slate-800">
+                            AM
+                        </span>
+                        <div class="bg-cranberry-50/60 dark:bg-slate-700/40 p-4 rounded-xl border border-cranberry-200/50 dark:border-slate-700">
+                            <h5 class="font-bold text-slate-900 dark:text-cranberry-200 text-base">Thanksgiving Morning (4 Hours Before Feast)</h5>
+                            <ul class="mt-2 text-xs text-slate-700 dark:text-slate-300 space-y-1.5 list-disc list-inside">
+                                <li>Preheat oven to 325°F. Remove giblets/neck from Butterball Turkey, pat skin dry, and place in roasting pan.</li>
+                                <li>Put Turkey in oven to roast (takes ~3 to 3.5 hours for a 12–14 lb bird).</li>
+                                <li>Boil sweet potatoes for Sweet Potato Marshmallow Casserole; mash into baking dish.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 2 Hours Before -->
+                    <div class="relative">
+                        <span class="absolute -left-[31px] md:-left-[39px] top-0 w-8 h-8 rounded-full bg-amber-600 text-white flex items-center justify-center font-bold text-xs ring-4 ring-white dark:ring-slate-800">
+                            2h
+                        </span>
+                        <div class="bg-amber-50/60 dark:bg-slate-700/40 p-4 rounded-xl border border-amber-200/50 dark:border-slate-700">
+                            <h5 class="font-bold text-slate-900 dark:text-amber-200 text-base">2 Hours Before Serving</h5>
+                            <ul class="mt-2 text-xs text-slate-700 dark:text-slate-300 space-y-1.5 list-disc list-inside">
+                                <li>Boil prepped russet potatoes and mash with milk/butter. Keep covered on warm setting or double boiler.</li>
+                                <li>Assemble Green Bean Casserole (drained cut green beans, mushroom soup, fried onions).</li>
+                                <li>Mix JIFFY Corn Casserole or batter into baking dish.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Final 45 Minutes -->
+                    <div class="relative">
+                        <span class="absolute -left-[31px] md:-left-[39px] top-0 w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs ring-4 ring-white dark:ring-slate-800">
+                            45m
+                        </span>
+                        <div class="bg-emerald-50/60 dark:bg-slate-700/40 p-4 rounded-xl border border-emerald-200/50 dark:border-slate-700">
+                            <h5 class="font-bold text-slate-900 dark:text-emerald-200 text-base">Final 45 Minutes (The Push!)</h5>
+                            <ul class="mt-2 text-xs text-slate-700 dark:text-slate-300 space-y-1.5 list-disc list-inside">
+                                <li>Remove Turkey when internal temp reaches 165°F. Cover loosely with foil to rest for 20 minutes (crucial for juicy meat!).</li>
+                                <li>Increase oven temp to 350°F–375°F. Bake Green Bean Casserole, Sweet Potato Marshmallow Casserole, and JIFFY Corn Casserole side-by-side.</li>
+                                <li>Prepare Stove Top Stuffing on stovetop. Whisk Great Value Brown Gravy packets in saucepan over medium heat.</li>
+                                <li>Pop Great Value Dinner Rolls into oven for final 7–10 minutes to heat up.</li>
+                                <li>Carve turkey, scoop side dishes, top pie with Great Value Whipped Topping, and serve!</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive 26-Item Walmart Basket Checklist -->
+        <section id="checklist" class="bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 md:p-8 shadow-sm space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-700 pb-4">
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center">
+                        <i class="fa-solid fa-cart-flatbed text-cranberry-600 mr-2.5"></i> Walmart Basket Ingredient Checklist
+                    </h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Track all 26 core items from the $35 bundle ($25 with code DOUBLE10)</p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex items-center space-x-2">
+                    <a href="https://www.walmart.com/i/shoppable-lists/Thanksgivng-value-meal/1069" target="_blank" rel="noopener" 
+                       class="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white transition-all shadow-sm flex items-center">
+                        <i class="fa-solid fa-basket-shopping mr-1.5"></i> Buy at Walmart
+                    </a>
+                    <button @click="checkAllIngredients()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-100 dark:bg-slate-700 text-amber-800 dark:text-amber-200 hover:bg-amber-200 transition-all">
+                        Select All
+                    </button>
+                    <button @click="uncheckAllIngredients()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-all">
+                        Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Progress bar -->
+            <div class="space-y-2">
+                <div class="flex justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
+                    <span>Preparation Progress</span>
+                    <span x-text="Math.round((checkedIngredientsCount / 26) * 100) + '%'"></span>
+                </div>
+                <div class="w-full h-3 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-amber-500 to-cranberry-600 transition-all duration-300"
+                         :style="'width: ' + ((checkedIngredientsCount / 26) * 100) + '%'"></div>
+                </div>
+            </div>
+
+            <!-- Checklist Grid by Category -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
+                <template x-for="(catGroup, groupName) in ingredientGroups" :key="groupName">
+                    <div class="bg-amber-50/40 dark:bg-slate-700/30 p-4 rounded-xl border border-amber-100 dark:border-slate-700/80 space-y-3">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-cranberry-700 dark:text-cranberry-400 border-b border-amber-200/50 dark:border-slate-700 pb-2" x-text="groupName"></h4>
+                        <ul class="space-y-2">
+                            <template x-for="item in catGroup" :key="item.id">
+                                <li>
+                                    <label class="flex items-start cursor-pointer text-xs group">
+                                        <input type="checkbox"
+                                               :checked="ingredientsState[item.id]"
+                                               @change="toggleIngredient(item.id)"
+                                               class="mt-0.5 rounded text-cranberry-600 focus:ring-cranberry-500 h-4 w-4 border-slate-300">
+                                        <span class="ml-2.5 transition-colors"
+                                              :class="ingredientsState[item.id] ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-700 dark:text-slate-200 group-hover:text-amber-800 dark:group-hover:text-amber-300'">
+                                            <strong class="font-semibold" x-text="item.qty + 'x '"></strong>
+                                            <span x-text="item.name"></span>
+                                        </span>
+                                    </label>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </template>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-slate-400 border-t border-slate-800 mt-20 py-8 px-4 sm:px-6 lg:px-8 text-center text-xs">
+        <div class="max-w-7xl mx-auto space-y-3">
+            <p class="text-slate-300 font-medium">Walmart Thanksgiving Value Meal Recipes & Master Preparation Web App</p>
+            <p class="text-slate-500">Designed around the 26 core items of the official Walmart Thanksgiving Shoppable Basket ($35 base / $25 with promo code DOUBLE10).</p>
+            <div class="pt-2 flex justify-center space-x-6 text-slate-400">
+                <a href="https://www.walmart.com/i/shoppable-lists/Thanksgivng-value-meal/1069" target="_blank" rel="noopener" class="hover:text-amber-400 transition-colors font-semibold text-emerald-400">
+                    <i class="fa-solid fa-bag-shopping mr-1"></i> Order Basket on Walmart ($25 w/ DOUBLE10)
+                </a>
+                <a href="#recipes" class="hover:text-amber-400 transition-colors">
+                    <i class="fa-solid fa-utensils mr-1"></i> Recipe Cards
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Alpine App Logic -->
+    <script>
+        function appData() {
+            return {
+                darkMode: false,
+                activeCategory: 'all',
+                
+                // Categories
+                categories: [
+                    { id: 'all', name: 'All Dishes', icon: 'fa-solid fa-utensils' },
+                    { id: 'turkey', name: 'Turkey & Gravy', icon: 'fa-solid fa-drumstick-bite' },
+                    { id: 'sides', name: 'Mains & Sides', icon: 'fa-solid fa-bowl-food' },
+                    { id: 'dessert', name: 'Desserts & Breads', icon: 'fa-solid fa-pie' },
+                    { id: 'timeline', name: 'Prep Timeline', icon: 'fa-solid fa-clock' }
+                ],
+
+                // 26 Core Items grouped for checklist
+                ingredientGroups: {
+                    'Poultry & Sauces': [
+                        { id: 'turkey', name: 'Butterball Frozen Whole Turkey (10–16 lbs)', qty: 1 },
+                        { id: 'gravy', name: 'Great Value Brown Gravy Mix (0.87 oz)', qty: 2 }
+                    ],
+                    'Fresh Produce': [
+                        { id: 'russets', name: 'Fresh Whole Russet Potatoes (5 lb bag)', qty: 1 },
+                        { id: 'sweets', name: 'Fresh Whole Sweet Potatoes', qty: 3 },
+                        { id: 'cranberries', name: 'Fresh Whole Cranberries (12 oz bag)', qty: 1 }
+                    ],
+                    'Canned Goods & Soup': [
+                        { id: 'greenbeans', name: 'Great Value Cut Green Beans (14.5 oz)', qty: 3 },
+                        { id: 'corn', name: 'Great Value Golden Sweet Whole Kernel Corn (15 oz)', qty: 3 },
+                        { id: 'mushroom_soup', name: 'Campbell’s Condensed Cream of Mushroom Soup', qty: 1 },
+                        { id: 'pumpkin', name: 'Great Value 100% Pure Pumpkin (15 oz)', qty: 1 },
+                        { id: 'evap_milk', name: 'Great Value Evaporated Milk (12 fl oz)', qty: 1 }
+                    ],
+                    'Pantry & Baking': [
+                        { id: 'stuffing', name: 'Stove Top Turkey Stuffing Mix (6 oz)', qty: 2 },
+                        { id: 'jiffy', name: 'JIFFY Corn Muffin Mix (8.5 oz)', qty: 2 },
+                        { id: 'onions', name: 'Great Value French Fried Onions (6 oz)', qty: 1 },
+                        { id: 'marshmallows', name: 'Jet-Puffed Mini Marshmallows (10 oz)', qty: 1 }
+                    ],
+                    'Bakery & Dessert Crusts': [
+                        { id: 'rolls', name: 'Great Value Brown & Serve White Rolls (12-ct)', qty: 1 },
+                        { id: 'pie_crust', name: 'Great Value Frozen 9" Pie Crusts (2-pack)', qty: 1 },
+                        { id: 'whipped', name: 'Great Value Whipped Topping (8 oz)', qty: 1 }
+                    ]
+                },
+
+                // Checklist state
+                ingredientsState: {},
+
+                // Interactive recipe steps state { recipeId: { stepIdx: boolean } }
+                recipeStepsState: {},
+
+                // Complete Recipe Data built specifically around the Walmart basket items
+                recipes: [
+                    {
+                        id: 'turkey-gravy',
+                        category: 'turkey',
+                        categoryName: 'Centerpiece',
+                        title: 'Roast Whole Turkey & Savory Gravy',
+                        servings: 'Yields 10 servings',
+                        totalTime: '3.5 - 4 Hours',
+                        ingredients: [
+                            '1 <strong>Butterball Frozen Whole Turkey</strong> (10–16 lbs)',
+                            '2 packets <strong>Great Value Brown Gravy Mix</strong>'
+                        ],
+                        steps: [
+                            'Thaw turkey in refrigerator for 3 full days prior to cooking.',
+                            'Preheat oven to 325°F (165°C). Remove giblets and neck from cavity; rinse turkey and pat completely dry with paper towels.',
+                            'Place turkey breast-side up on a rack in a roasting pan. Cover loosely with aluminum foil.',
+                            'Roast for 3 hours, removing foil during last 30 minutes to brown the skin. Cook until thigh thermometer reaches 165°F.',
+                            'Remove from oven and rest for 20 minutes before carving.',
+                            'Whisk brown gravy packets with water according to package instructions in a saucepan over medium heat until bubbling and thick.'
+                        ],
+                        tip: 'Letting the turkey rest for a full 20 minutes before carving locks in juice so the meat stays tender.'
+                    },
+                    {
+                        id: 'mashed-potatoes',
+                        category: 'sides',
+                        categoryName: 'Side Dish',
+                        title: 'Creamy Russet Mashed Potatoes',
+                        servings: 'Yields 8–10 servings',
+                        totalTime: '35 Mins',
+                        ingredients: [
+                            '1 bag (5 lbs) <strong>Fresh Whole Russet Potatoes</strong>'
+                        ],
+                        steps: [
+                            'Peel russet potatoes and chop into uniform 1-inch cubes.',
+                            'Place cubes into a large stockpot, cover with cold water and a pinch of salt, and bring to a boil.',
+                            'Simmer for 15–20 minutes until potatoes are easily pierced with a fork.',
+                            'Drain thoroughly in a colander, then return to warm pot.',
+                            'Mash until smooth, adding milk/butter or reserved potato cooking liquid to reach desired velvety consistency. Season with salt and pepper.'
+                        ],
+                        tip: 'Start with cold water when boiling potatoes so the cubes cook evenly from center to edge.'
+                    },
+                    {
+                        id: 'green-bean-casserole',
+                        category: 'sides',
+                        categoryName: 'Side Dish',
+                        title: 'Classic Green Bean Casserole',
+                        servings: 'Yields 8 servings',
+                        totalTime: '35 Mins',
+                        ingredients: [
+                            '3 cans (14.5 oz each) <strong>Great Value Cut Green Beans</strong> (drained)',
+                            '1 can (10.5 oz) <strong>Campbell’s Cream of Mushroom Soup</strong>',
+                            '1 bag (6 oz) <strong>Great Value French Fried Onions</strong>'
+                        ],
+                        steps: [
+                            'Preheat oven to 350°F (175°C).',
+                            'In a 1.5-quart casserole dish, combine drained green beans, mushroom soup, and half of the fried onions.',
+                            'Mix thoroughly until coated evenly.',
+                            'Bake uncovered for 25 minutes until hot and bubbling.',
+                            'Stir gently, sprinkle the remaining french fried onions on top, and bake 5 minutes more until golden crispy.'
+                        ],
+                        tip: 'Drain green beans thoroughly so the casserole retains a rich, creamy sauce structure.'
+                    },
+                    {
+                        id: 'sweet-potato-casserole',
+                        category: 'sides',
+                        categoryName: 'Side Dish',
+                        title: 'Sweet Potato Marshmallow Casserole',
+                        servings: 'Yields 8 servings',
+                        totalTime: '45 Mins',
+                        ingredients: [
+                            '3 count <strong>Fresh Whole Sweet Potatoes</strong>',
+                            '1 bag (10 oz) <strong>Jet-Puffed Mini Marshmallows</strong>'
+                        ],
+                        steps: [
+                            'Boil whole sweet potatoes until tender (~25 mins) or bake at 400°F.',
+                            'Allow to cool slightly, then peel off skins.',
+                            'Mash sweet potatoes in a bowl until smooth.',
+                            'Spread mashed sweet potatoes evenly into a greased baking dish.',
+                            'Top generously with Jet-Puffed mini marshmallows.',
+                            'Bake at 350°F for 15–20 minutes until marshmallows are puffed and toasted golden.'
+                        ],
+                        tip: 'Watch the marshmallows closely during the last 5 minutes of baking to prevent burning.'
+                    },
+                    {
+                        id: 'jiffy-corn-casserole',
+                        category: 'sides',
+                        categoryName: 'Side Dish',
+                        title: 'JIFFY Corn Casserole & Muffins',
+                        servings: 'Yields 10 servings',
+                        totalTime: '40 Mins',
+                        ingredients: [
+                            '2 boxes (8.5 oz each) <strong>"JIFFY" Corn Muffin Mix</strong>',
+                            '3 cans (15 oz each) <strong>Great Value Whole Kernel Corn</strong> (drained)'
+                        ],
+                        steps: [
+                            'Preheat oven to 375°F (190°C). Greasing a 9x13 baking dish or muffin tin.',
+                            'In a large bowl, whisk Jiffy muffin mix together with 2-3 cans of drained whole kernel corn.',
+                            'Pour into baking dish and smooth the top with a spatula.',
+                            'Bake for 30–35 minutes until golden brown on top and a toothpick inserted in center comes out clean.',
+                            'Let cool 10 minutes before slicing into squares.'
+                        ],
+                        tip: 'Adding the whole sweet corn kernels gives traditional Jiffy cornbread an extra pop of sweetness and texture.'
+                    },
+                    {
+                        id: 'stuffing-cranberry',
+                        category: 'sides',
+                        categoryName: 'Side Dish',
+                        title: 'Stove Top Stuffing & Fresh Cranberry Sauce',
+                        servings: 'Yields 8–10 servings',
+                        totalTime: '20 Mins',
+                        ingredients: [
+                            '2 boxes (6 oz each) <strong>Stove Top Turkey Stuffing Mix</strong>',
+                            '1 bag (12 oz) <strong>Fresh Whole Cranberries</strong>'
+                        ],
+                        steps: [
+                            '<strong>Stuffing:</strong> Bring water and butter/margarine to boil in saucepan according to Stove Top box instructions. Stir in stuffing mix, cover, remove from heat, and let stand 5 minutes.',
+                            '<strong>Fresh Cranberry Sauce:</strong> In a saucepan, combine 1 cup water, 1 cup sugar (if available), and rinsed fresh cranberries.',
+                            'Bring to a boil, then reduce heat to medium and simmer for 10 minutes until cranberries burst.',
+                            'Cool completely; sauce will thicken into a rich, fresh cranberry jam.'
+                        ],
+                        tip: 'Fresh cranberry sauce can be cooked the day before and stored in the fridge to save stovetop space.'
+                    },
+                    {
+                        id: 'pumpkin-pie',
+                        category: 'dessert',
+                        categoryName: 'Dessert',
+                        title: 'Traditional Pumpkin Pie & Whipped Topping',
+                        servings: 'Yields 2 Pies (16 slices)',
+                        totalTime: '1 Hour + Cooling',
+                        ingredients: [
+                            '1 can (15 oz) <strong>Great Value 100% Pure Pumpkin</strong>',
+                            '1 can (12 fl oz) <strong>Great Value Evaporated Milk</strong>',
+                            '1 pack (2 Count) <strong>Great Value Frozen Pie Crusts</strong>',
+                            '1 tub (8 oz) <strong>Great Value Whipped Topping</strong>'
+                        ],
+                        steps: [
+                            'Preheat oven to 425°F (220°C). Place pie crusts on a baking sheet.',
+                            'In a large bowl, mix pumpkin puree, evaporated milk, 3/4 cup sugar, 2 eggs (if available), and 1 tsp pumpkin pie spice until smooth.',
+                            'Divide mixture evenly into the 2 pie crust shells.',
+                            'Bake at 425°F for 15 minutes. Reduce temperature to 350°F (175°C) and bake 40–50 minutes longer until knife inserted in center comes out clean.',
+                            'Cool completely on wire rack. Serve chilled topped with Great Value Whipped Topping.'
+                        ],
+                        tip: 'Bake the pie the evening before Thanksgiving so it sets firmly in the fridge overnight.'
+                    },
+                    {
+                        id: 'dinner-rolls',
+                        category: 'dessert',
+                        categoryName: 'Bread',
+                        title: 'Warm Brown & Serve Dinner Rolls',
+                        servings: 'Yields 12 Rolls',
+                        totalTime: '10 Mins',
+                        ingredients: [
+                            '1 pack (12-ct) <strong>Great Value Brown & Serve Rolls</strong>'
+                        ],
+                        steps: [
+                            'Preheat oven to 400°F (200°C).',
+                            'Separate rolls and arrange on an ungreased baking sheet.',
+                            'Bake for 7 to 10 minutes until tops are golden brown and warm.',
+                            'Serve warm immediately alongside turkey and gravy.'
+                        ],
+                        tip: 'Brush tops with melted butter right out of the oven for a glossy bakery-style finish.'
+                    }
+                ],
+
+                // Initialize app state
+                init() {
+                    // Initialize checklist items
+                    Object.values(this.ingredientGroups).forEach(group => {
+                        group.forEach(item => {
+                            this.ingredientsState[item.id] = false;
+                        });
+                    });
+
+                    // Check for dark mode preference
+                    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                        this.darkMode = true;
+                    }
+                },
+
+                toggleDarkMode() {
+                    this.darkMode = !this.darkMode;
+                },
+
+                get filteredRecipes() {
+                    if (this.activeCategory === 'all') {
+                        return this.recipes;
+                    }
+                    return this.recipes.filter(r => r.category === this.activeCategory);
+                },
+
+                get checkedIngredientsCount() {
+                    let totalChecked = 0;
+                    Object.values(this.ingredientsState).forEach(val => {
+                        if (val) totalChecked++;
+                    });
+                    // Scaled across all 26 item units
+                    let ratio = totalChecked / Object.keys(this.ingredientsState).length;
+                    return Math.round(ratio * 26);
+                },
+
+                toggleIngredient(id) {
+                    this.ingredientsState[id] = !this.ingredientsState[id];
+                },
+
+                checkAllIngredients() {
+                    Object.keys(this.ingredientsState).forEach(key => {
+                        this.ingredientsState[key] = true;
+                    });
+                },
+
+                uncheckAllIngredients() {
+                    Object.keys(this.ingredientsState).forEach(key => {
+                        this.ingredientsState[key] = false;
+                    });
+                },
+
+                // Recipe step completion logic
+                toggleStep(recipeId, stepIdx) {
+                    if (!this.recipeStepsState[recipeId]) {
+                        this.recipeStepsState[recipeId] = {};
+                    }
+                    this.recipeStepsState[recipeId][stepIdx] = !this.recipeStepsState[recipeId][stepIdx];
+                },
+
+                isStepCompleted(recipeId, stepIdx) {
+                    return !!(this.recipeStepsState[recipeId] && this.recipeStepsState[recipeId][stepIdx]);
+                },
+
+                getCompletedStepsCount(recipeId) {
+                    if (!this.recipeStepsState[recipeId]) return 0;
+                    return Object.values(this.recipeStepsState[recipeId]).filter(Boolean).length;
+                }
+            };
+        }
+    </script>
+</body>
+</html>
