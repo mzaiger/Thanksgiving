@@ -50,6 +50,14 @@
         body { font-family: 'Inter', sans-serif; }
         .recipe-card-hover { transition: transform 0.25s ease, box-shadow 0.25s ease; }
         .recipe-card-hover:hover { transform: translateY(-4px); }
+        /* Flashing animation for extra ingredients notification */
+        @keyframes flash-pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(0.995); }
+        }
+        .animate-flash-alert {
+            animation: flash-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
         /* Custom scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -95,6 +103,28 @@
             </div>
         </div>
     </header>
+
+    <!-- FLASHING EXTRA INGREDIENTS WARNING BANNER -->
+    <aside class="animate-flash-alert bg-amber-500 text-slate-950 border-y-2 border-amber-600 px-4 py-3 shadow-md z-40 relative">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
+            <div class="flex items-center space-x-3">
+                <span class="flex h-3 w-3 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cranberry-600 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-cranberry-700"></span>
+                </span>
+                <p class="text-xs sm:text-sm font-black uppercase tracking-wide">
+                    <i class="fa-solid fa-triangle-exclamation text-cranberry-800 mr-1.5 text-base"></i>
+                    Pantry Alert: Extra Ingredients Required!
+                </p>
+            </div>
+            <p class="text-xs sm:text-sm font-semibold">
+                <span class="underline">Butter, Eggs, Milk, Creamed Corn, &amp; Sour Cream</span> are <strong class="bg-slate-950 text-amber-300 px-2 py-0.5 rounded text-xs uppercase">NOT included</strong> in the $35 / $25 Walmart Basket.
+            </p>
+            <a href="#extra-checklist" class="text-xs font-bold bg-slate-950 text-amber-300 hover:bg-slate-900 px-3 py-1 rounded-lg transition-colors whitespace-nowrap">
+                View Extra List &rarr;
+            </a>
+        </div>
+    </aside>
 
     <!-- Hero Banner -->
     <section class="relative overflow-hidden bg-gradient-to-br from-amber-700 via-amber-800 to-cranberry-900 text-white py-12 px-4 sm:px-6 lg:px-8 shadow-inner">
@@ -199,7 +229,7 @@
                                     <template x-for="(ing, idx) in recipe.ingredients" :key="idx">
                                         <li class="text-xs text-slate-700 dark:text-slate-300 flex items-start">
                                             <i class="fa-solid fa-circle-check text-emerald-500 dark:text-emerald-400 mt-0.5 mr-2 text-[10px]"></i>
-                                            <span x-html="ing"></span>
+                                            <span x-html="ing" class="[&>strong]:font-extrabold [&>strong]:text-amber-900 dark:[&>strong]:text-amber-300 [&>strong]:bg-amber-100/60 dark:[&>strong]:bg-amber-900/40 [&>strong]:px-1 [&>strong]:py-0.5 [&>strong]:rounded"></span>
                                         </li>
                                     </template>
                                 </ul>
@@ -233,7 +263,7 @@
                                 <i class="fa-solid fa-lightbulb text-amber-500 mt-0.5 mr-2 flex-shrink-0"></i>
                                 <div>
                                     <span class="font-bold">Pro Tip: </span>
-                                    <span x-text="recipe.tip"></span>
+                                    <span x-html="recipe.tip"></span>
                                 </div>
                             </div>
                         </div>
@@ -392,6 +422,41 @@
             </div>
         </section>
 
+        <!-- EXTRA PANTRY ESSENTIALS CHECKLIST SECTION -->
+        <section id="extra-checklist" class="bg-amber-500/10 dark:bg-amber-950/30 rounded-2xl border-2 border-amber-400/80 dark:border-amber-600/80 p-6 md:p-8 shadow-md space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-200 dark:border-amber-800/60 pb-3">
+                <div class="flex items-center space-x-3">
+                    <span class="p-2.5 bg-amber-500 text-slate-950 rounded-xl shadow-sm font-bold text-lg">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </span>
+                    <div>
+                        <h3 class="text-xl font-black text-slate-900 dark:text-amber-200 flex items-center">
+                            Required Extra Pantry Staples
+                        </h3>
+                        <p class="text-xs text-amber-800 dark:text-amber-300 font-medium">NOT included in the $35 / $25 Walmart Basket. Make sure you have these on hand!</p>
+                    </div>
+                </div>
+                <span class="text-xs uppercase font-extrabold px-3 py-1 bg-amber-400 text-slate-950 rounded-full border border-amber-500 self-start sm:self-auto">
+                    5 Extra Household Staples
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 pt-2">
+                <template x-for="extra in extraPantryItems" :key="extra.id">
+                    <label class="flex items-start p-3 bg-white dark:bg-slate-800 rounded-xl border border-amber-300/80 dark:border-amber-700/60 shadow-sm cursor-pointer hover:border-amber-500 transition-all">
+                        <input type="checkbox"
+                               :checked="extraPantryState[extra.id]"
+                               @change="extraPantryState[extra.id] = !extraPantryState[extra.id]"
+                               class="mt-0.5 rounded text-amber-600 focus:ring-amber-500 h-4 w-4">
+                        <div class="ml-2.5">
+                            <span class="text-xs font-bold block" :class="extraPantryState[extra.id] ? 'line-through text-slate-400' : 'text-slate-900 dark:text-white'" x-text="extra.name"></span>
+                            <span class="text-[10px] text-amber-700 dark:text-amber-400 font-medium" x-text="extra.usedIn"></span>
+                        </div>
+                    </label>
+                </template>
+            </div>
+        </section>
+
     </main>
 
     <!-- Footer -->
@@ -457,13 +522,29 @@
                     ]
                 },
 
+                // Extra Pantry Items required (NOT in Walmart bundle)
+                extraPantryItems: [
+                    { id: 'butter', name: 'Unsalted Butter (1-2 sticks)', usedIn: 'Used in: Potatoes, Stuffing, Corn Casserole, Rolls' },
+                    { id: 'milk', name: 'Whole Milk (1/2 cup)', usedIn: 'Used in: Mashed Potatoes' },
+                    { id: 'eggs', name: 'Fresh Eggs (4 count)', usedIn: 'Used in: Pumpkin Pie (2), Corn Casserole (2)' },
+                    { id: 'sour_cream', name: 'Sour Cream (8 oz container)', usedIn: 'Used in: Classic Corn Casserole' },
+                    { id: 'creamed_corn', name: 'Creamed Corn (1 can, 14.75 oz)', usedIn: 'Used in: Classic Corn Casserole' }
+                ],
+                extraPantryState: {
+                    butter: false,
+                    milk: false,
+                    eggs: false,
+                    sour_cream: false,
+                    creamed_corn: false
+                },
+
                 // Checklist state
                 ingredientsState: {},
 
                 // Interactive recipe steps state { recipeId: { stepIdx: boolean } }
                 recipeStepsState: {},
 
-                // Complete Recipe Data built specifically around the Walmart basket items
+                // Complete Recipe Data built around Walmart basket + tagged extra items
                 recipes: [
                     {
                         id: 'turkey-gravy',
@@ -474,36 +555,40 @@
                         totalTime: '3.5 - 4 Hours',
                         ingredients: [
                             '1 <strong>Butterball Frozen Whole Turkey</strong> (10–16 lbs)',
-                            '2 packets <strong>Great Value Brown Gravy Mix</strong>'
+                            '2 packets <strong>Great Value Brown Gravy Mix</strong>',
+                            '<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase ml-1">Extra Item</span> 2 tbsp <strong>Unsalted Butter</strong> (for basting skin)'
                         ],
                         steps: [
                             'Thaw turkey in refrigerator for 3 full days prior to cooking.',
                             'Preheat oven to 325°F (165°C). Remove giblets and neck from cavity; rinse turkey and pat completely dry with paper towels.',
-                            'Place turkey breast-side up on a rack in a roasting pan. Cover loosely with aluminum foil.',
+                            'Place turkey breast-side up on a rack in a roasting pan. Rub skin with 2 tbsp softened <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Butter [Extra]</span> and cover loosely with aluminum foil.',
                             'Roast for 3 hours, removing foil during last 30 minutes to brown the skin. Cook until thigh thermometer reaches 165°F.',
                             'Remove from oven and rest for 20 minutes before carving.',
                             'Whisk brown gravy packets with water according to package instructions in a saucepan over medium heat until bubbling and thick.'
                         ],
-                        tip: 'Letting the turkey rest for a full 20 minutes before carving locks in juice so the meat stays tender.'
+                        tip: 'Rubbing butter on the turkey skin before roasting ensures a rich golden brown crust.'
                     },
                     {
                         id: 'mashed-potatoes',
                         category: 'sides',
                         categoryName: 'Side Dish',
-                        title: 'Creamy Russet Mashed Potatoes',
+                        title: 'Ultra-Creamy Russet Mashed Potatoes',
                         servings: 'Yields 8–10 servings',
                         totalTime: '35 Mins',
                         ingredients: [
-                            '1 bag (5 lbs) <strong>Fresh Whole Russet Potatoes</strong>'
+                            '1 bag (5 lbs) <strong>Fresh Whole Russet Potatoes</strong>',
+                            '<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase ml-1">Extra Item</span> 1/2 stick (4 tbsp) <strong>Unsalted Butter</strong>',
+                            '<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase ml-1">Extra Item</span> 1/2 cup <strong>Whole Milk</strong>'
                         ],
                         steps: [
                             'Peel russet potatoes and chop into uniform 1-inch cubes.',
                             'Place cubes into a large stockpot, cover with cold water and a pinch of salt, and bring to a boil.',
                             'Simmer for 15–20 minutes until potatoes are easily pierced with a fork.',
                             'Drain thoroughly in a colander, then return to warm pot.',
-                            'Mash until smooth, adding milk/butter or reserved potato cooking liquid to reach desired velvety consistency. Season with salt and pepper.'
+                            'Add 4 tbsp melted <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Butter [Extra]</span> and 1/2 cup warm <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Milk [Extra]</span>.',
+                            'Mash vigorously until ultra-creamy and smooth. Season with salt and black pepper to taste.'
                         ],
-                        tip: 'Start with cold water when boiling potatoes so the cubes cook evenly from center to edge.'
+                        tip: 'Warming the milk and melting butter before adding to potatoes keeps them steaming hot and fluffy.'
                     },
                     {
                         id: 'green-bean-casserole',
@@ -535,13 +620,14 @@
                         totalTime: '45 Mins',
                         ingredients: [
                             '3 count <strong>Fresh Whole Sweet Potatoes</strong>',
-                            '1 bag (10 oz) <strong>Jet-Puffed Mini Marshmallows</strong>'
+                            '1 bag (10 oz) <strong>Jet-Puffed Mini Marshmallows</strong>',
+                            '<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase ml-1">Extra Item</span> 2 tbsp <strong>Unsalted Butter</strong> (optional)'
                         ],
                         steps: [
                             'Boil whole sweet potatoes until tender (~25 mins) or bake at 400°F.',
                             'Allow to cool slightly, then peel off skins.',
-                            'Mash sweet potatoes in a bowl until smooth.',
-                            'Spread mashed sweet potatoes evenly into a greased baking dish.',
+                            'Mash sweet potatoes with 2 tbsp melted <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Butter [Extra]</span> until smooth.',
+                            'Spread mashed sweet potatoes evenly into a greased 8x8 baking dish.',
                             'Top generously with Jet-Puffed mini marshmallows.',
                             'Bake at 350°F for 15–20 minutes until marshmallows are puffed and toasted golden.'
                         ],
@@ -551,21 +637,26 @@
                         id: 'jiffy-corn-casserole',
                         category: 'sides',
                         categoryName: 'Side Dish',
-                        title: 'JIFFY Corn Casserole & Muffins',
+                        title: 'Southern JIFFY Corn Casserole (Spoonbread)',
                         servings: 'Yields 10 servings',
-                        totalTime: '40 Mins',
+                        totalTime: '50 Mins',
                         ingredients: [
                             '2 boxes (8.5 oz each) <strong>"JIFFY" Corn Muffin Mix</strong>',
-                            '3 cans (15 oz each) <strong>Great Value Whole Kernel Corn</strong> (drained)'
+                            '2 cans (15 oz each) <strong>Great Value Whole Kernel Corn</strong> (drained)',
+                            '<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase ml-1">Extra Item</span> 1 can (14.75 oz) <strong>Creamed Corn</strong>',
+                            '<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase ml-1">Extra Item</span> 1 container (8 oz) <strong>Sour Cream</strong>',
+                            '<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase ml-1">Extra Item</span> 1 stick (1/2 cup) <strong>Unsalted Butter</strong> (melted)',
+                            '<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase ml-1">Extra Item</span> 2 <strong>Large Eggs</strong> (beaten)'
                         ],
                         steps: [
-                            'Preheat oven to 375°F (190°C). Greasing a 9x13 baking dish or muffin tin.',
-                            'In a large bowl, whisk Jiffy muffin mix together with 2-3 cans of drained whole kernel corn.',
-                            'Pour into baking dish and smooth the top with a spatula.',
-                            'Bake for 30–35 minutes until golden brown on top and a toothpick inserted in center comes out clean.',
-                            'Let cool 10 minutes before slicing into squares.'
+                            'Preheat oven to 350°F (175°C). Grease a 9x13-inch baking dish.',
+                            'In a large mixing bowl, combine 2 boxes of JIFFY mix, 2 cans drained whole corn, 1 can <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Creamed Corn [Extra]</span>, 8 oz <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Sour Cream [Extra]</span>, 1 stick melted <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Butter [Extra]</span>, and 2 beaten <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Eggs [Extra]</span>.',
+                            'Stir all ingredients until thoroughly mixed into a thick batter.',
+                            'Pour mixture into greased baking dish and spread evenly.',
+                            'Bake for 45 to 50 minutes until golden brown around edges and center is set.',
+                            'Let rest 10 minutes before serving with a spoon.'
                         ],
-                        tip: 'Adding the whole sweet corn kernels gives traditional Jiffy cornbread an extra pop of sweetness and texture.'
+                        tip: 'Adding sour cream, butter, eggs, and creamed corn converts basic cornbread into authentic Southern corn casserole.'
                     },
                     {
                         id: 'stuffing-cranberry',
@@ -576,15 +667,16 @@
                         totalTime: '20 Mins',
                         ingredients: [
                             '2 boxes (6 oz each) <strong>Stove Top Turkey Stuffing Mix</strong>',
-                            '1 bag (12 oz) <strong>Fresh Whole Cranberries</strong>'
+                            '1 bag (12 oz) <strong>Fresh Whole Cranberries</strong>',
+                            '<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase ml-1">Extra Item</span> 4 tbsp <strong>Unsalted Butter</strong> (for stuffing)'
                         ],
                         steps: [
-                            '<strong>Stuffing:</strong> Bring water and butter/margarine to boil in saucepan according to Stove Top box instructions. Stir in stuffing mix, cover, remove from heat, and let stand 5 minutes.',
-                            '<strong>Fresh Cranberry Sauce:</strong> In a saucepan, combine 1 cup water, 1 cup sugar (if available), and rinsed fresh cranberries.',
-                            'Bring to a boil, then reduce heat to medium and simmer for 10 minutes until cranberries burst.',
-                            'Cool completely; sauce will thicken into a rich, fresh cranberry jam.'
+                            '<strong>Stuffing:</strong> Bring 3 cups water and 4 tbsp <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Butter [Extra]</span> to boil in saucepan. Stir in 2 boxes Stove Top mix, cover, remove from heat, and let stand 5 minutes.',
+                            '<strong>Fresh Cranberry Sauce:</strong> Combine 1 cup water, 1 cup sugar, and rinsed fresh cranberries in a saucepan.',
+                            'Bring to a boil, then simmer over medium heat for 10 minutes until cranberries pop.',
+                            'Cool completely; sauce will naturally thicken into a rich jam.'
                         ],
-                        tip: 'Fresh cranberry sauce can be cooked the day before and stored in the fridge to save stovetop space.'
+                        tip: 'Fresh cranberry sauce can be cooked the day before and stored in the fridge.'
                     },
                     {
                         id: 'pumpkin-pie',
@@ -597,11 +689,12 @@
                             '1 can (15 oz) <strong>Great Value 100% Pure Pumpkin</strong>',
                             '1 can (12 fl oz) <strong>Great Value Evaporated Milk</strong>',
                             '1 pack (2 Count) <strong>Great Value Frozen Pie Crusts</strong>',
-                            '1 tub (8 oz) <strong>Great Value Whipped Topping</strong>'
+                            '1 tub (8 oz) <strong>Great Value Whipped Topping</strong>',
+                            '<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase ml-1">Extra Item</span> 2 <strong>Large Eggs</strong>'
                         ],
                         steps: [
                             'Preheat oven to 425°F (220°C). Place pie crusts on a baking sheet.',
-                            'In a large bowl, mix pumpkin puree, evaporated milk, 3/4 cup sugar, 2 eggs (if available), and 1 tsp pumpkin pie spice until smooth.',
+                            'In a large bowl, whisk together pumpkin puree, evaporated milk, 2 beaten <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Eggs [Extra]</span>, 3/4 cup sugar, and 1 tsp pumpkin pie spice until smooth.',
                             'Divide mixture evenly into the 2 pie crust shells.',
                             'Bake at 425°F for 15 minutes. Reduce temperature to 350°F (175°C) and bake 40–50 minutes longer until knife inserted in center comes out clean.',
                             'Cool completely on wire rack. Serve chilled topped with Great Value Whipped Topping.'
@@ -616,15 +709,16 @@
                         servings: 'Yields 12 Rolls',
                         totalTime: '10 Mins',
                         ingredients: [
-                            '1 pack (12-ct) <strong>Great Value Brown & Serve Rolls</strong>'
+                            '1 pack (12-ct) <strong>Great Value Brown & Serve Rolls</strong>',
+                            '<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase ml-1">Extra Item</span> 2 tbsp <strong>Unsalted Butter</strong> (for brushing)'
                         ],
                         steps: [
                             'Preheat oven to 400°F (200°C).',
                             'Separate rolls and arrange on an ungreased baking sheet.',
                             'Bake for 7 to 10 minutes until tops are golden brown and warm.',
-                            'Serve warm immediately alongside turkey and gravy.'
+                            'Brush tops with 2 tbsp melted <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Butter [Extra]</span> right out of the oven for a glossy finish.'
                         ],
-                        tip: 'Brush tops with melted butter right out of the oven for a glossy bakery-style finish.'
+                        tip: 'Brushing warm rolls with melted butter right out of the oven gives them a rich bakery shine.'
                     }
                 ],
 
