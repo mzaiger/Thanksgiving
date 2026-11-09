@@ -24,6 +24,9 @@
                         cranberry: {
                             50: '#fff1f2',
                             100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
                             500: '#f43f5e',
                             600: '#e11d48',
                             700: '#be123c',
@@ -288,7 +291,7 @@
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-700 pb-4">
                 <div>
                     <h3 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center">
-                        <i class="fa-solid fa-cart-flatbed text-cranberry-600 mr-2.5"></i> Walmart Basket Ingredient Checklist
+                        <i class="fa-solid fa-cart-flatbed text-cranberry-600 dark:text-cranberry-400 mr-2.5"></i> Walmart Basket Ingredient Checklist
                     </h3>
                     <p class="text-sm text-slate-500 dark:text-slate-400">Track all 26 core items from the $35 bundle ($25 with code DOUBLE10)</p>
                 </div>
@@ -332,7 +335,7 @@
                                         <input type="checkbox"
                                                :checked="ingredientsState[item.id]"
                                                @change="toggleIngredient(item.id)"
-                                               class="mt-0.5 rounded text-cranberry-600 focus:ring-cranberry-500 h-4 w-4 border-slate-300">
+                                               class="mt-0.5 rounded text-cranberry-600 dark:text-cranberry-400 focus:ring-cranberry-500 h-4 w-4 border-slate-300">
                                         <span class="ml-2.5 transition-colors"
                                               :class="ingredientsState[item.id] ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-700 dark:text-slate-200 group-hover:text-amber-800 dark:group-hover:text-amber-300'">
                                             <strong class="font-semibold" x-text="item.qty + 'x '"></strong>
@@ -388,7 +391,7 @@
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-amber-200 dark:border-slate-800 pb-4">
                 <div>
                     <h3 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center">
-                        <i class="fa-solid fa-book-open text-cranberry-600 mr-2.5"></i> Course Recipes
+                        <i class="fa-solid fa-book-open text-cranberry-600 dark:text-cranberry-400 mr-2.5"></i> Course Recipes
                     </h3>
                     <p class="text-sm text-slate-500 dark:text-slate-400">Browse recipes by course category</p>
                 </div>
@@ -416,7 +419,7 @@
                             <div class="flex justify-between items-start mb-2">
                                 <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-700/50" x-text="recipe.categoryName"></span>
                                 <span class="text-xs text-slate-500 dark:text-slate-400 font-medium flex items-center">
-                                    <i class="fa-regular fa-clock mr-1 text-cranberry-600"></i> <span x-text="recipe.totalTime"></span>
+                                    <i class="fa-regular fa-clock mr-1 text-cranberry-600 dark:text-cranberry-400"></i> <span x-text="recipe.totalTime"></span>
                                 </span>
                             </div>
                             <h4 class="text-xl font-bold text-slate-900 dark:text-white leading-snug" x-text="recipe.title"></h4>
@@ -428,7 +431,7 @@
                             <!-- Walmart Basket Ingredients Needed -->
                             <div>
                                 <h5 class="text-xs font-bold uppercase text-amber-800 dark:text-amber-400 mb-2 flex items-center">
-                                    <i class="fa-solid fa-basket-shopping mr-1.5 text-cranberry-600"></i> Basket Items Needed
+                                    <i class="fa-solid fa-basket-shopping mr-1.5 text-cranberry-600 dark:text-cranberry-400"></i> Basket Items Needed
                                 </h5>
                                 <ul class="space-y-1.5">
                                     <template x-for="(ing, idx) in recipe.ingredients" :key="idx">
@@ -456,7 +459,7 @@
                                             <input type="checkbox" 
                                                    :checked="isStepCompleted(recipe.id, sIdx)"
                                                    @change="toggleStep(recipe.id, sIdx)"
-                                                   class="mt-0.5 rounded text-cranberry-600 focus:ring-cranberry-500 mr-2.5 h-3.5 w-3.5">
+                                                   class="mt-0.5 rounded text-cranberry-600 dark:text-cranberry-400 focus:ring-cranberry-500 mr-2.5 h-3.5 w-3.5">
                                             <span class="flex-1"><strong class="font-semibold" x-text="(sIdx + 1) + '. '"></strong><span x-html="step"></span></span>
                                         </label>
                                     </template>
