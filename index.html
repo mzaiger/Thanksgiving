@@ -230,7 +230,7 @@
                             <h5 class="font-bold text-slate-900 dark:text-amber-200 text-base">Day Before (Wednesday Evening)</h5>
                             <ul class="mt-2 text-xs text-slate-700 dark:text-slate-300 space-y-1.5 list-disc list-inside">
                                 <li>Bake the Traditional Pumpkin Pie with Great Value Pure Pumpkin & Pie Crusts. Chill in fridge overnight.</li>
-                                <li>Cook the Fresh Cranberry Sauce (Jam) on the stovetop; let cool and refrigerate so it thickens.</li>
+                                <li>Cook the Fresh Cranberry Sauce (Jam) in a 3-quart stainless steel saucepan on the stovetop; let cool and refrigerate so it thickens.</li>
                                 <li>Peel and cube russet potatoes; submerge in cold water in fridge to prevent browning.</li>
                             </ul>
                         </div>
@@ -246,7 +246,7 @@
                             <ul class="mt-2 text-xs text-slate-700 dark:text-slate-300 space-y-1.5 list-disc list-inside">
                                 <li>Preheat oven to 325°F. Remove giblets/neck from Butterball Turkey, pat skin dry, and place in roasting pan.</li>
                                 <li>Put Turkey in oven to roast (takes ~3 to 3.5 hours for a 12–14 lb bird).</li>
-                                <li>Boil cubed sweet potatoes for the Sweet Potato Marshmallow Casserole; mash with butter into the baking dish (marshmallows go on right before baking).</li>
+                                <li>Boil cubed sweet potatoes in a 5–6 quart pot for the Sweet Potato Marshmallow Casserole; mash with butter into the baking dish (marshmallows go on right before baking).</li>
                             </ul>
                         </div>
                     </div>
@@ -259,7 +259,7 @@
                         <div class="bg-amber-50/60 dark:bg-slate-700/40 p-4 rounded-xl border border-amber-200/50 dark:border-slate-700">
                             <h5 class="font-bold text-slate-900 dark:text-amber-200 text-base">2 Hours Before Serving</h5>
                             <ul class="mt-2 text-xs text-slate-700 dark:text-slate-300 space-y-1.5 list-disc list-inside">
-                                <li>Boil prepped russet potatoes and mash with milk/butter. Keep covered on warm setting or double boiler.</li>
+                                <li>Boil prepped russet potatoes in the 8-quart stockpot and mash with milk/butter (warm them in the 1-quart saucepan). Keep covered on warm setting or double boiler.</li>
                                 <li>Assemble Green Bean Casserole (drained green beans, mushroom soup, milk, half the fried onions).</li>
                                 <li>Mix the JIFFY Corn Casserole batter and pour it into the baking dish.</li>
                             </ul>
@@ -276,7 +276,7 @@
                             <ul class="mt-2 text-xs text-slate-700 dark:text-slate-300 space-y-1.5 list-disc list-inside">
                                 <li>Remove Turkey when the thickest part of the breast and innermost thigh read 165°F. Cover loosely with foil to rest for 20 minutes (crucial for juicy meat!).</li>
                                 <li>Set oven to 350°F. Put the JIFFY Corn Casserole in first (45–55 min), then the Green Bean Casserole about 30 minutes before serving and the Sweet Potato Casserole about 25 minutes before.</li>
-                                <li>Make the Stove Top Stuffing on the stovetop (5 minutes). Cook the Great Value Brown Gravy packets in a saucepan over medium heat (1 cup cold water each, simmer 1 minute).</li>
+                                <li>Make the Stove Top Stuffing in a 3–4 quart covered saucepan (5 minutes). Cook the Great Value Brown Gravy packets in a 2-quart saucepan over medium heat (1 cup cold water each, simmer 1 minute).</li>
                                 <li>Bake the Brown &amp; Serve Rolls last, following the package directions (they may want a hotter oven than the casseroles).</li>
                                 <li>Carve turkey, scoop side dishes, top pie with Great Value Whipped Topping, and serve!</li>
                             </ul>
@@ -427,6 +427,10 @@
                             class="px-4 py-2 rounded-lg bg-cranberry-700 hover:bg-cranberry-800 text-white text-xs font-bold">Mark all ready</button>
                     <button @click="utensilState = {}"
                             class="px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold">Clear checklist</button>
+                </div>
+                <div class="mt-5 p-4 rounded-xl bg-amber-50 dark:bg-slate-700/40 border border-amber-200/60 dark:border-slate-700 text-xs text-amber-900 dark:text-amber-200">
+                    <span class="font-bold"><i class="fa-solid fa-fire-burner mr-1.5"></i>Burner plan:</span>
+                    Cranberry sauce goes on one burner the day before, and the yams take one in the morning. The busy stretch is the last hour, when the mashed potatoes (covered, on low), the stuffing, and the gravy are on at the same time. That is 3 burners, so a standard 4-burner stove covers everything, and the 1-quart saucepan can use the fourth while the milk and butter warm.
                 </div>
                 <p class="text-xs text-slate-500 dark:text-slate-400 mt-3">Optional items are marked. Adjust dish sizes and quantities to match your menu and what you already own.</p>
             </div>
@@ -591,6 +595,20 @@
                         { id: 'plastic-wrap', name: 'Plastic wrap or food-storage covers' },
                         { id: 'baster', name: 'Turkey baster or large spoon for basting (optional)' }
                     ]},
+                    { name: 'Stovetop Pots & Pans', items: [
+                        { id: 'pot-mashed', name: '8-quart stockpot with lid', note: 'Mashed potatoes: 5 lbs russets in 1-inch chunks plus water to cover. A 10-quart pot is safer against boil-over. Also holds the potatoes warm, covered.' },
+                        { id: 'pot-yams', name: '5–6 quart pot or Dutch oven with lid', note: 'Yams / sweet potatoes: about 3 lbs cubed plus water to cover. Or reuse the 8-quart pot, washed, since the yams go on in the morning.' },
+                        { id: 'pot-stuffing', name: '3–4 quart saucepan with lid', note: 'Stove Top Stuffing: 3 cups water and 8 tbsp butter, then both boxes. It makes about 6 cups.' },
+                        { id: 'pot-gravy', name: '2-quart saucepan', note: 'Gravy: both packets make 2 cups total. A heavy bottom helps keep it from scorching.' },
+                        { id: 'pot-cranberry', name: '3-quart stainless steel saucepan', note: 'Cranberry sauce: 1 cup water, 1 cup sugar, 12 oz berries. Stainless is best; avoid aluminum or cast iron with acidic cranberries.' },
+                        { id: 'pot-small', name: '1-quart small saucepan', note: 'Warms the milk and melts the butter for the mashed potatoes (a microwave-safe bowl works too).' },
+                        { id: 'colander', name: 'Large colander (5+ quart)', note: 'Drains 5 lbs of potatoes or 3 lbs of yams. Set it in the sink before lifting the pot.' },
+                        { id: 'wood-spoon', name: 'Wooden spoon or heat-safe silicone spatula', note: 'For stirring the cranberries, stuffing, and potatoes' },
+                        { id: 'liquid-cup', name: 'Liquid measuring cup (4-cup)', note: 'For the water (3 cups for stuffing, 1 cup per gravy packet) and milk' },
+                        { id: 'peeler', name: 'Vegetable peeler and sharp chef’s knife', note: 'Peel and cube 5 lbs of russets and about 3 lbs of sweet potatoes' },
+                        { id: 'soak-bowl', name: 'Large bowl (6+ quart)', note: 'Holds the peeled, cubed russets in cold water in the fridge the day before' },
+                        { id: 'trivets', name: 'Trivets or heat-safe pads', note: 'For setting hot pots and casserole dishes on the counter or table' }
+                    ]},
                     { name: 'Cutting, Stirring & Serving', items: [
                         { id: 'ten-knives', name: '10 dinner knives' },
                         { id: 'ten-forks', name: '10 dinner forks' },
@@ -727,7 +745,7 @@
                             'Roast at 325°F: about 3 to 3¾ hours for a 12–14 lb bird (2¾–3 hours for 10–12 lbs, 3¾–4¼ hours for 14–18 lbs). Remove the foil for the last 30 minutes to brown the skin.',
                             'Check the temperature in the thickest part of the breast and the innermost part of the thigh. It is done when it reads 165°F.',
                             'Rest, loosely covered, for 20 minutes before carving.',
-                            'Gravy: for each packet, whisk the mix into 1 cup cold water in a saucepan, bring to a boil over medium heat while stirring, then simmer 1 minute. It thickens as it stands. Two packets make 2 cups.'
+                            'Gravy: for each packet, whisk the mix into 1 cup cold water in a 2-quart saucepan, bring to a boil over medium heat while stirring, then simmer 1 minute. It thickens as it stands. Two packets make 2 cups.'
                         ],
                         tip: 'Roasting times are estimates. Go by the thermometer reading (165°F), not the clock.'
                     },
@@ -747,7 +765,7 @@
                         ],
                         steps: [
                             'Peel russet potatoes and cut into 1-inch chunks.',
-                            'Place in a large stockpot, cover with cold water and a generous pinch of salt, and bring to a boil.',
+                            'Place in a large 8-quart (or bigger) stockpot, cover with cold water and a generous pinch of salt, and bring to a boil.',
                             'Reduce heat and simmer 15–20 minutes until a fork pierces them easily.',
                             'Drain thoroughly in a colander, then return to the warm pot.',
                             'Add 1/2 cup melted <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Butter [Extra]</span> and gradually add about 1 cup warm <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Milk [Extra]</span>.',
@@ -795,7 +813,7 @@
                             '<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase ml-1">Extra Item</span> 1 pinch <strong>Salt</strong>'
                         ],
                         steps: [
-                            'Preheat oven to 350°F. Peel the sweet potatoes, cut into cubes, and boil about 15 minutes until fork-tender (or roast whole at 350°F for 45–60 minutes, then peel). Drain well.',
+                            'Preheat oven to 350°F. Peel the sweet potatoes, cut into cubes, and boil in a 5–6 quart pot, with water to cover, about 15 minutes until fork-tender (or roast whole at 350°F for 45–60 minutes, then peel). Drain well.',
                             'Mash the sweet potatoes with 4 tbsp melted <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Butter [Extra]</span> and a pinch of <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Salt [Extra]</span> until smooth.',
                             'Spread evenly into a greased 9x13-inch (or 3-quart) baking dish.',
                             'Top evenly with the Jet-Puffed mini marshmallows.',
@@ -843,7 +861,7 @@
                             '<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase ml-1">Extra Item</span> 8 tbsp (1 stick) <strong>Unsalted Butter</strong>'
                         ],
                         steps: [
-                            'In a large saucepan, bring 3 cups water and 8 tbsp <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Butter [Extra]</span> to a boil (that is 1 1/2 cups water and 4 tbsp butter per box).',
+                            'In a 3–4 quart saucepan with a lid, bring 3 cups water and 8 tbsp <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Butter [Extra]</span> to a boil (that is 1 1/2 cups water and 4 tbsp butter per box).',
                             'Stir in both boxes of stuffing mix and cover.',
                             'Remove from heat and let stand 5 minutes.',
                             'Fluff with a fork and serve.'
@@ -865,7 +883,7 @@
                         ],
                         steps: [
                             'Rinse the cranberries and pick out any soft or bad ones.',
-                            'In a medium saucepan (stainless steel is best), combine 1 cup water and 1 cup <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Sugar [Extra]</span>. Bring to a boil over high heat, stirring to dissolve the sugar.',
+                            'In a medium 3-quart saucepan (stainless steel is best), combine 1 cup water and 1 cup <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Sugar [Extra]</span>. Bring to a boil over high heat, stirring to dissolve the sugar.',
                             'Stir in the cranberries and return to a boil.',
                             'Reduce heat to medium and simmer about 10 minutes, stirring occasionally, until most of the berries have popped.',
                             'Remove from heat and cool completely at room temperature. Refrigerate until serving. It thickens into a jam-like sauce as it cools.'
