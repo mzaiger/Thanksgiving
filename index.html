@@ -66,6 +66,12 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        
+        .img {width=100%;align=center}
+        
+@media (width <= 767px) {
+  .img { width=50% }
+}
     </style>
 </head>
 <body x-data="appData()" :class="{ 'dark': darkMode, 'bg-slate-900 text-slate-100': darkMode, 'bg-amber-50/40 text-slate-800': !darkMode }" class="min-h-screen transition-colors duration-300">
@@ -154,7 +160,7 @@
             </span>
             <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 text-amber-50 drop-shadow-sm">
                 Delicious Thanksgiving Dinner for 10
-            </h2><img src="./IMG_2340.jpeg" alt="Thanksgiving Dinner" width=100% align=center />
+            </h2><img src="./IMG_2340.jpeg" alt="Thanksgiving Dinner" />
             <p class="text-base sm:text-lg text-amber-100 max-w-2xl mx-auto mb-6 font-light leading-relaxed">
                 Step-by-step master cooking instructions, full recipe timing, interactive ingredient checklists, and a prep schedule crafted around your Walmart holiday meal bundle.
             </p>
