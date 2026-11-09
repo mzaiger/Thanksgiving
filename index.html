@@ -475,6 +475,15 @@
                                     <span x-html="recipe.tip"></span>
                                 </div>
                             </div>
+
+                            <!-- Sources -->
+                            <div class="text-[11px] text-slate-500 dark:text-slate-400 flex flex-wrap items-center gap-x-2 gap-y-1">
+                                <i class="fa-solid fa-link text-amber-600 dark:text-amber-400"></i>
+                                <span class="font-bold uppercase">Sources:</span>
+                                <template x-for="(src, i) in recipe.sources" :key="i">
+                                    <a :href="src.url" target="_blank" rel="noopener" class="underline hover:text-cranberry-700 dark:hover:text-cranberry-400" x-text="src.label"></a>
+                                </template>
+                            </div>
                         </div>
                     </article>
                 </template>
@@ -596,6 +605,7 @@
                 recipes: [
                     {
                         id: 'turkey-gravy',
+                        sources: [{ label: 'USDA: Let’s Talk Turkey (thawing, roasting, 165°F)', url: 'https://www.fsis.usda.gov/sites/default/files/media_file/2021-04/Lets_Talk_Turkey.pdf' }, { label: 'Great Value Brown Gravy Mix directions (Walmart)', url: 'https://www.walmart.com/ip/13530370377' }],
                         category: 'turkey',
                         categoryName: 'Centerpiece',
                         title: 'Roast Whole Turkey & Savory Gravy',
@@ -619,6 +629,7 @@
                     },
                     {
                         id: 'mashed-potatoes',
+                        sources: [{ label: 'I Wash You Dry: Classic Mashed Potatoes (5 lb for 10)', url: 'https://iwashyoudry.com/classic-mashed-potatoes-recipe' }, { label: 'Dinner, Then Dessert: Easy Mashed Potatoes', url: 'https://dinnerthendessert.com/easy-mashed-potatoes-10-add-in-ideas/' }],
                         category: 'sides',
                         categoryName: 'Side Dish',
                         title: 'Ultra-Creamy Russet Mashed Potatoes',
@@ -642,6 +653,7 @@
                     },
                     {
                         id: 'green-bean-casserole',
+                        sources: [{ label: 'Campbell’s: Green Bean Casserole', url: 'https://www.campbells.com/green-bean-casserole/' }],
                         category: 'sides',
                         categoryName: 'Side Dish',
                         title: 'Classic Green Bean Casserole',
@@ -666,6 +678,7 @@
                     },
                     {
                         id: 'sweet-potato-casserole',
+                        sources: [{ label: 'Cup of Yum: Sweet Potato Casserole with Marshmallows', url: 'https://cupofyum.com/recipes/sweet-potato-casserole-with-marshmallows-2' }, { label: 'Cup of Yum: 10 oz marshmallow version', url: 'https://cupofyum.com/recipes/sweet-potato-casserole-with-marshmallows-7' }],
                         category: 'sides',
                         categoryName: 'Side Dish',
                         title: 'Sweet Potato Marshmallow Casserole',
@@ -688,6 +701,7 @@
                     },
                     {
                         id: 'jiffy-corn-casserole',
+                        sources: [{ label: 'Dear Crissy: Jiffy Corn Casserole (one box)', url: 'https://dearcrissy.com/wprm_print/jiffy-corn-casserole' }, { label: 'Cooklang: Jiffy Corn Casserole (two boxes)', url: 'https://recipes.cooklang.org/recipes/5362' }],
                         category: 'sides',
                         categoryName: 'Side Dish',
                         title: 'Southern JIFFY Corn Casserole (Spoonbread)',
@@ -714,6 +728,7 @@
                     },
                     {
                         id: 'stove-top-stuffing',
+                        sources: [{ label: 'Stove Top box directions (Stop & Shop)', url: 'https://stopandshop.com/groceries/product/stove-top-stuffing-mix-for-turkey-6-oz-box/16004' }],
                         category: 'sides',
                         categoryName: 'Side Dish',
                         title: 'Stove Top Stuffing',
@@ -733,6 +748,7 @@
                     },
                     {
                         id: 'cranberry-jam',
+                        sources: [{ label: 'Ocean Spray Whole Berry Cranberry Sauce (via Fox News)', url: 'https://www.foxnews.com/lifestyle/whole-berry-cranberry-sauce-thanksgiving-recipe.print' }, { label: 'Ocean Spray Cranberry Sauce Recipe', url: 'https://insanelygoodrecipes.com/ocean-spray-cranberry-sauce-recipe/' }],
                         category: 'sides',
                         categoryName: 'Side Dish',
                         title: 'Fresh Cranberry Sauce (Jam)',
@@ -754,6 +770,7 @@
                     },
                     {
                         id: 'pumpkin-pie',
+                        sources: [{ label: 'Libby’s Famous Pumpkin Pie (BigOven, includes two-shallow-pie note)', url: 'https://www.bigoven.com/recipe/163595/libbys-famous-pumpkin-pie' }, { label: 'Libby’s Famous Pumpkin Pie (Kitchen Magpie)', url: 'https://www.thekitchenmagpie.com/libbys-famous-pumpkin-pie-recipe/' }],
                         category: 'dessert',
                         categoryName: 'Dessert',
                         title: 'Traditional Pumpkin Pie & Whipped Topping',
@@ -783,6 +800,7 @@
                     },
                     {
                         id: 'dinner-rolls',
+                        sources: [{ label: 'Example brand: Lewis Brown ’N Serve (400°F)', url: 'https://shop.lowesfoods.com/products/lewis-brown-n-serve-rolls-12-count/648301' }, { label: 'Example brand: Franz Brown N Serve (450°F)', url: 'https://www.albertsons.com/shop/product-details.960167482.html' }],
                         category: 'dessert',
                         categoryName: 'Bread',
                         title: 'Warm Brown & Serve Dinner Rolls',
