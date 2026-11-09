@@ -966,10 +966,56 @@
                         });
                     });
 
+                    // Restore saved check marks from cookies, then save on every change
+                    this.loadChecks();
+                    ['ingredientsState', 'extraPantryState', 'utensilState', 'recipeStepsState'].forEach(key => {
+                        this.$watch(key, () => this.saveChecks(key));
+                    });
+
                     // Check for dark mode preference
                     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                         this.darkMode = true;
                     }
+                },
+
+                // ---- Cookie persistence for check marks ----
+                readCookie(name) {
+                    const m = document.cookie.split('; ').find(c => c.startsWith(name + '='));
+                    if (!m) return [];
+                    try { return JSON.parse(decodeURIComponent(m.substring(name.length + 1))); }
+                    catch (e) { return []; }
+                },
+
+                writeCookie(name, list) {
+                    const oneYear = 60 * 60 * 24 * 365;
+                    document.cookie = name + '=' + encodeURIComponent(JSON.stringify(list)) +
+                        '; max-age=' + oneYear + '; path=/; SameSite=Lax';
+                },
+
+                loadChecks() {
+                    ['ingredientsState', 'extraPantryState', 'utensilState'].forEach(key => {
+                        this.readCookie('tg_' + key).forEach(id => { this[key][id] = true; });
+                    });
+                    this.readCookie('tg_recipeStepsState').forEach(entry => {
+                        const i = entry.lastIndexOf('|');
+                        const recipeId = entry.substring(0, i);
+                        const stepIdx = entry.substring(i + 1);
+                        if (!this.recipeStepsState[recipeId]) this.recipeStepsState[recipeId] = {};
+                        this.recipeStepsState[recipeId][stepIdx] = true;
+                    });
+                },
+
+                saveChecks(key) {
+                    let list;
+                    if (key === 'recipeStepsState') {
+                        list = [];
+                        Object.entries(this.recipeStepsState).forEach(([rid, steps]) => {
+                            Object.entries(steps).forEach(([idx, done]) => { if (done) list.push(rid + '|' + idx); });
+                        });
+                    } else {
+                        list = Object.keys(this[key]).filter(id => this[key][id]);
+                    }
+                    this.writeCookie('tg_' + key, list);
                 },
 
                 toggleDarkMode() {
