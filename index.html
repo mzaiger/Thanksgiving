@@ -69,10 +69,19 @@
     </style>
 </head>
 <body x-data="appData()" :class="{ 'dark': darkMode, 'bg-slate-900 text-slate-100': darkMode, 'bg-amber-50/40 text-slate-800': !darkMode }" class="min-h-screen transition-colors duration-300">
- 
+
+    <!-- Top Navigation Banner -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-amber-200/50 dark:border-slate-800 shadow-sm transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span class="p-2 bg-cranberry-600 text-white rounded-xl shadow-md">
+                    <i class="fa-solid fa-turkey text-xl"></i>
+                </span>
+                <div>
                     <h1 class="font-bold text-lg leading-none text-slate-900 dark:text-amber-100">Walmart Thanksgiving Feast</h1>
                     <p class="text-xs text-amber-700 dark:text-amber-400 font-medium">Value Meal Basket Guide (Feeds up to 10)</p>
-                </div> </div>
+                </div>
+            </div>
 
             <div class="flex items-center space-x-4">
                 <!-- Promo Code Badge in Header -->
@@ -144,8 +153,8 @@
                 <i class="fa-solid fa-leaf mr-1.5 text-amber-300"></i> Official 26-Item Walmart Value Basket Recipes
             </span>
             <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 text-amber-50 drop-shadow-sm">
-                Delicious Thanksgiving Dinner for 10<h2><img src="./IMG_2340.jpeg" alt="Thanksgiving Dinner" width=100% align=center />
-           
+                Delicious Thanksgiving Dinner for 10
+            </h2><img src="./IMG_2340.jpeg" alt="Thanksgiving Dinner" width=100% align=center />
             <p class="text-base sm:text-lg text-amber-100 max-w-2xl mx-auto mb-6 font-light leading-relaxed">
                 Step-by-step master cooking instructions, full recipe timing, interactive ingredient checklists, and a prep schedule crafted around your Walmart holiday meal bundle.
             </p>
