@@ -387,6 +387,51 @@
         </section>
         </div>
 
+        <!-- Kitchen Utensils & Serving Supplies Checklist -->
+        <section id="utensils" x-show="show.utensils" x-transition class="space-y-6 mb-10">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl border border-amber-200 dark:border-slate-700 p-5 md:p-7 shadow-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-100 dark:border-slate-700 pb-4 mb-5">
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center">
+                            <i class="fa-solid fa-kitchen-set text-cranberry-600 dark:text-cranberry-400 mr-3"></i>
+                            Kitchen Utensils & Serving Supplies
+                        </h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">A complete equipment checklist for preparing and serving Thanksgiving dinner for 10.</p>
+                    </div>
+                    <div class="text-sm font-bold text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-slate-700 rounded-xl px-3 py-2 whitespace-nowrap">
+                        <span x-text="Object.values(utensilState).filter(Boolean).length"></span> / <span x-text="utensils.length"></span> ready
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                    <template x-for="group in utensilGroups" :key="group.name">
+                        <div class="rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+                            <div class="px-4 py-3 bg-amber-50 dark:bg-slate-700/70 font-bold text-sm text-amber-900 dark:text-amber-200" x-text="group.name"></div>
+                            <div class="p-3 space-y-2">
+                                <template x-for="item in group.items" :key="item.id">
+                                    <label class="flex items-start gap-2.5 p-2 rounded-lg hover:bg-amber-50/70 dark:hover:bg-slate-700/50 cursor-pointer">
+                                        <input type="checkbox" :checked="utensilState[item.id] || false"
+                                               @change="utensilState[item.id] = $event.target.checked"
+                                               class="mt-0.5 rounded text-amber-600 focus:ring-amber-500 h-4 w-4">
+                                        <span class="min-w-0">
+                                            <span class="block text-sm font-semibold" :class="utensilState[item.id] ? 'line-through text-slate-400' : 'text-slate-800 dark:text-slate-100'" x-text="item.name"></span>
+                                            <span class="block text-xs text-slate-500 dark:text-slate-400" x-text="item.note" x-show="item.note"></span>
+                                        </span>
+                                    </label>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div class="mt-5 flex flex-wrap gap-2">
+                    <button @click="utensilState = Object.fromEntries(utensils.map(item => [item.id, true]))"
+                            class="px-4 py-2 rounded-lg bg-cranberry-700 hover:bg-cranberry-800 text-white text-xs font-bold">Mark all ready</button>
+                    <button @click="utensilState = {}"
+                            class="px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold">Clear checklist</button>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-3">Optional items are marked. Adjust dish sizes and quantities to match your menu and what you already own.</p>
+            </div>
+        </section>
+
         <!-- Quick Navigation & Category Filters -->
         <section id="recipes" x-show="show.recipes" x-transition class="space-y-6">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-amber-200 dark:border-slate-800 pb-4">
@@ -519,14 +564,68 @@
             return {
                 darkMode: false,
                 activeCategory: 'all',
-                show: { prep: true, ingredients: true, recipes: true },
+                show: { prep: true, ingredients: true, utensils: true, recipes: true },
                 sections: [
                     { id: 'prep', name: 'Prep', icon: 'fa-solid fa-clock' },
                     { id: 'ingredients', name: 'Ingredients', icon: 'fa-solid fa-basket-shopping' },
+                    { id: 'utensils', name: 'Kitchen Gear', icon: 'fa-solid fa-kitchen-set' },
                     { id: 'recipes', name: 'Recipes', icon: 'fa-solid fa-utensils' }
                 ],
                 
                 // Categories
+                // Kitchen equipment and table-setting checklist
+                utensilGroups: [
+                    { name: 'Cooking & Baking', items: [
+                        { id: 'roasting-pan', name: 'Roasting pan', note: 'Large enough for your turkey' },
+                        { id: 'casserole-dishes', name: 'Several 9×9 dishes or other baking dishes', note: 'For casseroles, sides, and reheating' },
+                        { id: 'mixing-bowls', name: 'Mixing bowls', note: 'A few sizes for prep and mixing' },
+                        { id: 'measuring-cups', name: 'Measuring cups and spoons' },
+                        { id: 'egg-beater', name: 'Egg beater / whisk (optional)' },
+                        { id: 'masher', name: 'Potato masher (optional)' },
+                        { id: 'cutting-boards', name: 'Cutting boards', note: 'Ideally separate boards for raw turkey and produce' },
+                        { id: 'thermometer', name: 'Meat thermometer', note: 'Check the turkey reaches a safe internal temperature' },
+                        { id: 'oven-mitts', name: 'Oven mitts / heat-resistant gloves' },
+                        { id: 'foil', name: 'Aluminum foil' },
+                        { id: 'plastic-wrap', name: 'Plastic wrap or food-storage covers' },
+                        { id: 'baster', name: 'Turkey baster or large spoon for basting (optional)' }
+                    ]},
+                    { name: 'Cutting, Stirring & Serving', items: [
+                        { id: 'ten-knives', name: '10 dinner knives' },
+                        { id: 'ten-forks', name: '10 dinner forks' },
+                        { id: 'ten-spoons', name: '10 dinner spoons' },
+                        { id: 'big-spoons', name: 'Large serving spoons', note: 'For potatoes, vegetables, stuffing, and sides' },
+                        { id: 'turkey-knife', name: 'Large carving knife', note: 'For slicing the turkey' },
+                        { id: 'carving-fork', name: 'Carving fork' },
+                        { id: 'spatula', name: 'Serving spatula / turner' },
+                        { id: 'tongs', name: 'Kitchen tongs' },
+                        { id: 'ladle', name: 'Gravy ladle' },
+                        { id: 'whisk', name: 'Gravy whisk' },
+                        { id: 'can-opener', name: 'Can opener' }
+                    ]},
+                    { name: 'Table & Drinks', items: [
+                        { id: 'ten-glasses', name: '10 drinking glasses' },
+                        { id: 'ten-plates', name: '10 dinner plates' },
+                        { id: 'placemats', name: '10 placemats (optional)' },
+                        { id: 'napkins', name: 'Napkins', note: 'Thanksgiving-themed napkins optional' },
+                        { id: 'paper-towels', name: 'Paper towels' },
+                        { id: 'gravy-boat', name: 'Gravy boat / gravy server', note: 'Gravy Train or another gravy serving dish' },
+                        { id: 'butter-dish', name: 'Butter holder / butter dish' },
+                        { id: 'serving-bowls', name: 'Serving bowls and platters', note: 'For sides, rolls, and turkey' },
+                        { id: 'pitcher', name: 'Water pitcher or drink dispenser' },
+                        { id: 'coasters', name: 'Coasters (optional)' },
+                        { id: 'salt-pepper', name: 'Salt and pepper shakers' }
+                    ]},
+                    { name: 'Cleanup & Leftovers', items: [
+                        { id: 'containers', name: 'Food-storage containers', note: 'For leftovers' },
+                        { id: 'zip-bags', name: 'Resealable bags or foil pans' },
+                        { id: 'dish-soap', name: 'Dish soap and sponge' },
+                        { id: 'trash-bags', name: 'Trash bags' },
+                        { id: 'dish-towels', name: 'Kitchen towels' }
+                    ]}
+                ],
+                get utensils() { return this.utensilGroups.flatMap(group => group.items); },
+                utensilState: {},
+
                 categories: [
                     { id: 'all', name: 'All Dishes', icon: 'fa-solid fa-utensils' },
                     { id: 'turkey', name: 'Turkey & Gravy', icon: 'fa-solid fa-drumstick-bite' },
