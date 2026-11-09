@@ -104,6 +104,21 @@
         </div>
     </header>
 
+    <!-- Section Circle Selectors -->
+    <nav class="sticky top-16 z-40 backdrop-blur-md bg-amber-50/90 dark:bg-slate-900/90 border-b border-amber-200/50 dark:border-slate-800 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-start justify-center gap-8 sm:gap-12">
+            <template x-for="sec in sections" :key="sec.id">
+                <button @click="show[sec.id] = !show[sec.id]" :aria-pressed="show[sec.id]" class="group flex flex-col items-center gap-1.5 focus:outline-none">
+                    <span class="w-14 h-14 rounded-full flex items-center justify-center text-xl border-2 transition-all shadow-sm group-focus-visible:ring-2 group-focus-visible:ring-amber-500"
+                          :class="show[sec.id] ? 'bg-cranberry-700 border-cranberry-700 text-white shadow-md scale-105' : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-400 dark:text-slate-500 hover:border-cranberry-500'">
+                        <i :class="sec.icon"></i>
+                    </span>
+                    <span class="text-xs font-semibold" :class="show[sec.id] ? 'text-cranberry-700 dark:text-cranberry-400' : 'text-slate-500 dark:text-slate-400'" x-text="sec.name"></span>
+                </button>
+            </template>
+        </div>
+    </nav>
+
     <!-- FLASHING EXTRA INGREDIENTS WARNING BANNER -->
     <aside class="animate-flash-alert bg-amber-500 text-slate-950 border-y-2 border-amber-600 px-4 py-3 shadow-md z-40 relative">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
@@ -118,9 +133,9 @@
                 </p>
             </div>
             <p class="text-xs sm:text-sm font-semibold">
-                <span class="underline">Butter, Eggs, Milk, Creamed Corn, &amp; Sour Cream</span> are <strong class="bg-slate-950 text-amber-300 px-2 py-0.5 rounded text-xs uppercase">NOT included</strong> in the $35 / $25 Walmart Basket.
+                <span class="underline">Butter, Eggs, Milk, Creamed Corn, Sour Cream, &amp; Sugar</span> are <strong class="bg-slate-950 text-amber-300 px-2 py-0.5 rounded text-xs uppercase">NOT included</strong> in the $35 / $25 Walmart Basket.
             </p>
-            <a href="#extra-checklist" class="text-xs font-bold bg-slate-950 text-amber-300 hover:bg-slate-900 px-3 py-1 rounded-lg transition-colors whitespace-nowrap">
+            <a href="#extra-checklist" @click="show.ingredients = true" class="text-xs font-bold bg-slate-950 text-amber-300 hover:bg-slate-900 px-3 py-1 rounded-lg transition-colors whitespace-nowrap">
                 View Extra List &rarr;
             </a>
         </div>
@@ -162,10 +177,10 @@
             </div>
 
             <div class="flex flex-wrap items-center justify-center gap-3">
-                <a href="#recipes" class="inline-flex items-center px-5 py-2.5 rounded-xl bg-cranberry-600 hover:bg-cranberry-700 text-white font-semibold text-sm shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
+                <a href="#recipes" @click="show.recipes = true" class="inline-flex items-center px-5 py-2.5 rounded-xl bg-cranberry-600 hover:bg-cranberry-700 text-white font-semibold text-sm shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
                     <i class="fa-solid fa-utensils mr-2"></i> Browse All Recipes
                 </a>
-                <a href="#checklist" class="inline-flex items-center px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-sm backdrop-blur-md border border-white/20 transition-all">
+                <a href="#checklist" @click="show.ingredients = true" class="inline-flex items-center px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-sm backdrop-blur-md border border-white/20 transition-all">
                     <i class="fa-solid fa-list-check mr-2"></i> Ingredient Tracker
                 </a>
                 <a href="https://www.walmart.com/i/shoppable-lists/Thanksgivng-value-meal/1069" target="_blank" rel="noopener" class="inline-flex items-center px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-sm shadow-md transition-all">
@@ -178,6 +193,8 @@
     <!-- Main Content Container -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
 
+
+        <div id="prep" x-show="show.prep" x-transition>
             <!-- Thanksgiving Cooking Day Timeline View -->
             <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 md:p-8 shadow-sm space-y-8">
                 <div class="max-w-3xl">
@@ -263,7 +280,9 @@
                     </div>
                 </div>
             </div>
+        </div>
 
+        <div id="ingredients" x-show="show.ingredients" x-transition class="space-y-12">
         <!-- Interactive 26-Item Walmart Basket Checklist -->
         <section id="checklist" class="bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 md:p-8 shadow-sm space-y-6">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-700 pb-4">
@@ -328,8 +347,44 @@
             </div>
         </section>
 
+        <!-- EXTRA PANTRY ESSENTIALS CHECKLIST SECTION -->
+        <section id="extra-checklist" class="bg-amber-500/10 dark:bg-amber-950/30 rounded-2xl border-2 border-amber-400/80 dark:border-amber-600/80 p-6 md:p-8 shadow-md space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-200 dark:border-amber-800/60 pb-3">
+                <div class="flex items-center space-x-3">
+                    <span class="p-2.5 bg-amber-500 text-slate-950 rounded-xl shadow-sm font-bold text-lg">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </span>
+                    <div>
+                        <h3 class="text-xl font-black text-slate-900 dark:text-amber-200 flex items-center">
+                            Required Extra Pantry Staples
+                        </h3>
+                        <p class="text-xs text-amber-800 dark:text-amber-300 font-medium">NOT included in the $35 / $25 Walmart Basket. Make sure you have these on hand!</p>
+                    </div>
+                </div>
+                <span class="text-xs uppercase font-extrabold px-3 py-1 bg-amber-400 text-slate-950 rounded-full border border-amber-500 self-start sm:self-auto">
+                    6 Extra Household Staples
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 pt-2">
+                <template x-for="extra in extraPantryItems" :key="extra.id">
+                    <label class="flex items-start p-3 bg-white dark:bg-slate-800 rounded-xl border border-amber-300/80 dark:border-amber-700/60 shadow-sm cursor-pointer hover:border-amber-500 transition-all">
+                        <input type="checkbox"
+                               :checked="extraPantryState[extra.id]"
+                               @change="extraPantryState[extra.id] = !extraPantryState[extra.id]"
+                               class="mt-0.5 rounded text-amber-600 focus:ring-amber-500 h-4 w-4">
+                        <div class="ml-2.5">
+                            <span class="text-xs font-bold block" :class="extraPantryState[extra.id] ? 'line-through text-slate-400' : 'text-slate-900 dark:text-white'" x-text="extra.name"></span>
+                            <span class="text-[10px] text-amber-700 dark:text-amber-400 font-medium" x-text="extra.usedIn"></span>
+                        </div>
+                    </label>
+                </template>
+            </div>
+        </section>
+        </div>
+
         <!-- Quick Navigation & Category Filters -->
-        <section id="recipes" class="space-y-6">
+        <section id="recipes" x-show="show.recipes" x-transition class="space-y-6">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-amber-200 dark:border-slate-800 pb-4">
                 <div>
                     <h3 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center">
@@ -426,40 +481,6 @@
 
 
 
-        <!-- EXTRA PANTRY ESSENTIALS CHECKLIST SECTION -->
-        <section id="extra-checklist" class="bg-amber-500/10 dark:bg-amber-950/30 rounded-2xl border-2 border-amber-400/80 dark:border-amber-600/80 p-6 md:p-8 shadow-md space-y-4">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-200 dark:border-amber-800/60 pb-3">
-                <div class="flex items-center space-x-3">
-                    <span class="p-2.5 bg-amber-500 text-slate-950 rounded-xl shadow-sm font-bold text-lg">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                    </span>
-                    <div>
-                        <h3 class="text-xl font-black text-slate-900 dark:text-amber-200 flex items-center">
-                            Required Extra Pantry Staples
-                        </h3>
-                        <p class="text-xs text-amber-800 dark:text-amber-300 font-medium">NOT included in the $35 / $25 Walmart Basket. Make sure you have these on hand!</p>
-                    </div>
-                </div>
-                <span class="text-xs uppercase font-extrabold px-3 py-1 bg-amber-400 text-slate-950 rounded-full border border-amber-500 self-start sm:self-auto">
-                    5 Extra Household Staples
-                </span>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 pt-2">
-                <template x-for="extra in extraPantryItems" :key="extra.id">
-                    <label class="flex items-start p-3 bg-white dark:bg-slate-800 rounded-xl border border-amber-300/80 dark:border-amber-700/60 shadow-sm cursor-pointer hover:border-amber-500 transition-all">
-                        <input type="checkbox"
-                               :checked="extraPantryState[extra.id]"
-                               @change="extraPantryState[extra.id] = !extraPantryState[extra.id]"
-                               class="mt-0.5 rounded text-amber-600 focus:ring-amber-500 h-4 w-4">
-                        <div class="ml-2.5">
-                            <span class="text-xs font-bold block" :class="extraPantryState[extra.id] ? 'line-through text-slate-400' : 'text-slate-900 dark:text-white'" x-text="extra.name"></span>
-                            <span class="text-[10px] text-amber-700 dark:text-amber-400 font-medium" x-text="extra.usedIn"></span>
-                        </div>
-                    </label>
-                </template>
-            </div>
-        </section>
 
     </main>
 
@@ -485,6 +506,12 @@
             return {
                 darkMode: false,
                 activeCategory: 'all',
+                show: { prep: true, ingredients: true, recipes: true },
+                sections: [
+                    { id: 'prep', name: 'Prep', icon: 'fa-solid fa-clock' },
+                    { id: 'ingredients', name: 'Ingredients', icon: 'fa-solid fa-basket-shopping' },
+                    { id: 'recipes', name: 'Recipes', icon: 'fa-solid fa-utensils' }
+                ],
                 
                 // Categories
                 categories: [
@@ -531,14 +558,16 @@
                     { id: 'milk', name: 'Whole Milk (1/2 cup)', usedIn: 'Used in: Mashed Potatoes' },
                     { id: 'eggs', name: 'Fresh Eggs (4 count)', usedIn: 'Used in: Pumpkin Pie (2), Corn Casserole (2)' },
                     { id: 'sour_cream', name: 'Sour Cream (8 oz container)', usedIn: 'Used in: Classic Corn Casserole' },
-                    { id: 'creamed_corn', name: 'Creamed Corn (1 can, 14.75 oz)', usedIn: 'Used in: Classic Corn Casserole' }
+                    { id: 'creamed_corn', name: 'Creamed Corn (1 can, 14.75 oz)', usedIn: 'Used in: Classic Corn Casserole' },
+                    { id: 'sugar', name: 'Granulated Sugar (about 2 cups)', usedIn: 'Used in: Cranberry Sauce Jam (1 cup), Pumpkin Pie (3/4 cup)' }
                 ],
                 extraPantryState: {
                     butter: false,
                     milk: false,
                     eggs: false,
                     sour_cream: false,
-                    creamed_corn: false
+                    creamed_corn: false,
+                    sugar: false
                 },
 
                 // Checklist state
@@ -671,11 +700,12 @@
                         ingredients: [
                             '2 boxes (6 oz each) <strong>Stove Top Turkey Stuffing Mix</strong>',
                             '1 bag (12 oz) <strong>Fresh Whole Cranberries</strong>',
-                            '<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase ml-1">Extra Item</span> 4 tbsp <strong>Unsalted Butter</strong> (for stuffing)'
+                            '<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase ml-1">Extra Item</span> 4 tbsp <strong>Unsalted Butter</strong> (for stuffing)',
+                            '<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase ml-1">Extra Item</span> 1 cup <strong>Granulated Sugar</strong> (for cranberry jam)'
                         ],
                         steps: [
                             '<strong>Stuffing:</strong> Bring 3 cups water and 4 tbsp <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Butter [Extra]</span> to boil in saucepan. Stir in 2 boxes Stove Top mix, cover, remove from heat, and let stand 5 minutes.',
-                            '<strong>Fresh Cranberry Sauce:</strong> Combine 1 cup water, 1 cup sugar, and rinsed fresh cranberries in a saucepan.',
+                            '<strong>Fresh Cranberry Sauce:</strong> Combine 1 cup water, 1 cup <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Sugar [Extra]</span>, and rinsed fresh cranberries in a saucepan.',
                             'Bring to a boil, then simmer over medium heat for 10 minutes until cranberries pop.',
                             'Cool completely; sauce will naturally thicken into a rich jam.'
                         ],
@@ -693,11 +723,12 @@
                             '1 can (12 fl oz) <strong>Great Value Evaporated Milk</strong>',
                             '1 pack (2 Count) <strong>Great Value Frozen Pie Crusts</strong>',
                             '1 tub (8 oz) <strong>Great Value Whipped Topping</strong>',
-                            '<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase ml-1">Extra Item</span> 2 <strong>Large Eggs</strong>'
+                            '<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase ml-1">Extra Item</span> 2 <strong>Large Eggs</strong>',
+                            '<span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase ml-1">Extra Item</span> 3/4 cup <strong>Granulated Sugar</strong>'
                         ],
                         steps: [
                             'Preheat oven to 425°F (220°C). Place pie crusts on a baking sheet.',
-                            'In a large bowl, whisk together pumpkin puree, evaporated milk, 2 beaten <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Eggs [Extra]</span>, 3/4 cup sugar, and 1 tsp pumpkin pie spice until smooth.',
+                            'In a large bowl, whisk together pumpkin puree, evaporated milk, 2 beaten <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Eggs [Extra]</span>, 3/4 cup <span class="bg-amber-200 dark:bg-amber-900/60 px-1 rounded font-semibold text-amber-950 dark:text-amber-200">Sugar [Extra]</span>, and 1 tsp pumpkin pie spice until smooth.',
                             'Divide mixture evenly into the 2 pie crust shells.',
                             'Bake at 425°F for 15 minutes. Reduce temperature to 350°F (175°C) and bake 40–50 minutes longer until knife inserted in center comes out clean.',
                             'Cool completely on wire rack. Serve chilled topped with Great Value Whipped Topping.'
